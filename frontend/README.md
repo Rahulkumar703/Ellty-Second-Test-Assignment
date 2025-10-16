@@ -1,73 +1,113 @@
-# React + TypeScript + Vite
+# Frontend App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern React frontend application with user authentication and a starting numbers feature, built with Vite and TypeScript.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- User authentication (login/signup) with JWT cookies
+- Create, view, and delete starting numbers
+- Mathematical operations tree system (add, subtract, multiply, divide)
+- Nested operations with parent-child relationships
+- User-based ownership and permissions (users can only delete their own numbers)
+- Form validation with Zod
+- Toast notifications
+- Responsive design with Tailwind CSS
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Framework**: React 19 with TypeScript
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS v4
+- **UI Components**: Radix UI primitives
+- **Routing**: React Router DOM v7
+- **Forms**: React Hook Form with Zod validation
+- **Icons**: Lucide React
+- **Notifications**: Sonner (toast notifications)
 
-## Expanding the ESLint configuration
+## Project Structure
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+src/
+├── components/          # Reusable UI components
+│   ├── ui/             # Base UI components (buttons, forms, etc.)
+│   ├── starting-number/ # Starting number specific components
+│   │   ├── create-starting-number-form.tsx
+│   │   ├── starting-number-card.tsx
+│   │   ├── operation-tree.tsx
+│   │   └── operation-input.tsx
+│   ├── header.tsx      # App header/navigation
+│   └── guest-route.tsx # Route protection
+├── contexts/           # React contexts (AuthContext)
+├── hooks/              # Custom React hooks
+├── lib/                # Utility functions and configurations
+├── pages/              # Page components
+│   ├── home.tsx        # Home page
+│   ├── login.tsx       # Login page
+│   ├── signup.tsx      # Signup page
+│   └── starting-numbers.tsx # Starting numbers management
+├── services/           # API service functions
+├── types/              # TypeScript type definitions
+├── App.tsx             # Main app component
+└── main.tsx            # Application entry point
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Setup & Installation
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. **Install dependencies**
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+   ```bash
+   npm install
+   ```
+
+2. **Environment variables**
+   Create a `.env` file in the frontend directory:
+
+   ```env
+   VITE_API_URL=http://localhost:5000/api
+   ```
+
+3. **Start development server**
+
+   ```bash
+   npm run dev
+   ```
+
+4. **Build for production**
+
+   ```bash
+   npm run build
+   ```
+
+5. **Preview production build**
+   ```bash
+   npm run preview
+   ```
+
+## Development
+
+- The app runs on `http://localhost:5173` by default (Vite dev server)
+- Backend API should be running on `http://localhost:5000`
+- Authentication state is managed via React Context
+- Forms use React Hook Form with Zod schema validation
+- UI components follow Radix UI patterns with Tailwind styling
+
+## Available Routes
+
+- `/` - Home page
+- `/login` - User login (guest only)
+- `/signup` - User registration (guest only)
+- `/starting-numbers` - Starting numbers management with operations
+
+## Key Features
+
+- **Authentication**: JWT token-based auth with HTTP-only cookies
+- **Route Protection**: Guest routes redirect authenticated users
+- **Starting Numbers**: Create starting numbers and build calculation trees
+- **Operations System**:
+  - Add mathematical operations (+, -, \*, /) to starting numbers
+  - Create nested operation chains (operations can have child operations)
+  - View operation trees with author information and timestamps
+- **User Permissions**: Users can only delete their own starting numbers
+- **Form Validation**: Client-side validation with helpful error messages
+- **Responsive Design**: Mobile-first approach with Tailwind CSS
+- **Code Splitting**: Lazy-loaded pages for better performance
