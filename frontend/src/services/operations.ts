@@ -11,7 +11,10 @@ export const fetchOperations = async ({
   try {
     // Make the API call
     const response = await fetch(
-      `${API_URL}/operation/${parentType}/${parentId}`
+      `${API_URL}/operation/${parentType}/${parentId}`,
+      {
+        credentials: "include",
+      }
     );
 
     // Parse the response

@@ -84,7 +84,7 @@ const StartingNumberCard = ({ number, refresh }: Props) => {
               <MessageCircle /> {number.operations.length}
             </Button>
           </DrawerTrigger>
-          <DrawerContent className="max-w-4xl">
+          <DrawerContent className="max-w-4xl mx-auto">
             <DrawerHeader>
               <DrawerTitle>Operations of {number.value}</DrawerTitle>
               <DrawerDescription className="capitalize">

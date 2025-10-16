@@ -20,7 +20,27 @@ if (process.env.NODE_ENV === "production") {
 app.use(
   cors({
     credentials: true,
-    origin: process.env.CLIENT_URL,
+    origin: function (origin, callback) {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+
+      // In development, allow localhost
+      if (process.env.NODE_ENV !== "production") {
+        return callback(null, true);
+      }
+
+      // In production, allow specific origins
+      const allowedOrigins = [
+        process.env.CLIENT_URL,
+        // Add your frontend Vercel URLs here
+      ].filter(Boolean);
+
+      if (allowedOrigins.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
   })
 );
 app.use(express.json());

@@ -5,7 +5,9 @@ const API_URL = import.meta.env.VITE_API_URL;
 export const fetchStartingNumbers = async () => {
   try {
     // Make the API call
-    const response = await fetch(`${API_URL}/starting-number`);
+    const response = await fetch(`${API_URL}/starting-number`, {
+      credentials: "include",
+    });
 
     // Parse the response
     const data: IAPIResponse<IStartingNumber[]> = await response.json();
