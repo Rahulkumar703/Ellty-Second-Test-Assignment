@@ -7,8 +7,12 @@ import {
   getStartingNumberById,
 } from "../controllers/starting-number.controller";
 import { auth } from "../middlewares/auth.middleware";
+import { requireDbConnection } from "../middlewares/db.middleware";
 
 const router = express.Router();
+
+// Apply database connection middleware to all starting number routes
+router.use(requireDbConnection);
 
 // Create starting number route
 router.post("/new", userLimiter, auth, createStartingNumber);

@@ -5,8 +5,12 @@ import {
   createOperation,
   getOperations,
 } from "../controllers/operation.controller";
+import { requireDbConnection } from "../middlewares/db.middleware";
 
 const router = express.Router();
+
+// Apply database connection middleware to all operation routes
+router.use(requireDbConnection);
 
 // Create operation route
 router.post("/new", userLimiter, auth, createOperation);

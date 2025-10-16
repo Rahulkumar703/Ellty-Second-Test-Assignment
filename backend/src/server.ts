@@ -2,9 +2,9 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import { apiLimiter } from "./middlewares/rate-limiter.middleware";
-import mongoose from "mongoose";
 import { Request, Response } from "express";
 import { authRoutes, operationRoutes, startingNumberRoutes } from "./routes";
+import { connectToDatabase, isDbConnected } from "./db";
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -35,31 +35,15 @@ app.use(express.static("public"));
 app.use(apiLimiter);
 
 const PORT = process.env.APP_PORT;
-const MONGODB_URI = process.env.MONGODB_URI;
 
-// Optimize mongoose for serverless (Vercel)
-mongoose.set("bufferCommands", false);
-
-// Connect to MongoDB with serverless-optimized options
-if (MONGODB_URI) {
-  mongoose
-    .connect(MONGODB_URI, {
-      serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
-      socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
-      bufferCommands: false, // Disable mongoose buffering
-      maxPoolSize: 10, // Maintain up to 10 socket connections
-      minPoolSize: 5, // Maintain minimum 5 socket connections
-    })
-    .then(() => console.log("Database connected"))
-    .catch((err) => console.error("Database error:", err));
-}
+// Initialize database connection
+connectToDatabase().catch(console.error);
 
 // Health check route
 app.get("/", (req: Request, res: Response) => {
   res.json({
     message: "Welcome to the API",
-    database:
-      mongoose.connection.readyState === 1 ? "Connected" : "Connecting...",
+    database: isDbConnected() ? "Connected" : "Connecting...",
   });
 });
 
@@ -72,9 +56,7 @@ if (process.env.NODE_ENV !== "production") {
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
     console.log(
-      `Database status: ${
-        mongoose.connection.readyState === 1 ? "Connected" : "Connecting..."
-      }`
+      `Database status: ${isDbConnected() ? "Connected" : "Connecting..."}`
     );
   });
 }
