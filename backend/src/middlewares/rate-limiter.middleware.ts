@@ -2,8 +2,8 @@ import rateLimit from "express-rate-limit";
 
 const FIFTEEN_MINUTES = 15 * 60 * 1000;
 
-const MAX_API_REQUESTS = 1000;
-const MAX_USER_ACTIONS = 150;
+const MAX_API_REQUESTS = 100;
+const MAX_USER_ACTIONS = 20;
 
 const apiLimiter = rateLimit({
   windowMs: FIFTEEN_MINUTES,
