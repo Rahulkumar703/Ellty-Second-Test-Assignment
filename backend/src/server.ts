@@ -41,10 +41,22 @@ app.use("/api/operation", operationRoutes);
 const PORT = process.env.APP_PORT;
 const MONGODB_URI = process.env.MONGODB_URI;
 
-mongoose
-  .connect(MONGODB_URI!)
-  .then(() => console.log("Database connected"))
-  .catch((err) => console.error("Database error:", err));
+// Optimize mongoose for serverless (Vercel)
+mongoose.set("bufferCommands", false);
+
+// Connect to MongoDB with serverless-optimized options
+if (MONGODB_URI) {
+  mongoose
+    .connect(MONGODB_URI, {
+      serverSelectionTimeoutMS: 5000, // Timeout after 5s instead of 30s
+      socketTimeoutMS: 45000, // Close sockets after 45s of inactivity
+      bufferCommands: false, // Disable mongoose buffering
+      maxPoolSize: 10, // Maintain up to 10 socket connections
+      minPoolSize: 5, // Maintain minimum 5 socket connections
+    })
+    .then(() => console.log("Database connected"))
+    .catch((err) => console.error("Database error:", err));
+}
 
 if (process.env.NODE_ENV !== "production") {
   app.listen(PORT, () => {

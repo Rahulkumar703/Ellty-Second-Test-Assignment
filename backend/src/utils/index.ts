@@ -2,6 +2,9 @@ import jwt from "jsonwebtoken";
 import Operation from "../models/operator.model";
 import { IOperationsTree } from "../types";
 
+import dotenv from "dotenv";
+dotenv.config();
+
 const JWT_SECRET = process.env.JWT_SECRET as string;
 if (!JWT_SECRET) {
   throw new Error("JWT_SECRET is not defined in environment variables");
