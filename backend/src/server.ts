@@ -10,6 +10,12 @@ dotenv.config();
 
 const app = express();
 
+// Trust proxy for Vercel/production environments
+// This allows express-rate-limit to work correctly with X-Forwarded-For headers
+if (process.env.NODE_ENV === "production") {
+  app.set("trust proxy", 1);
+}
+
 // Middleware
 app.use(
   cors({
@@ -27,16 +33,6 @@ app.use(cookieParser());
 app.use(express.static("public"));
 
 app.use(apiLimiter);
-
-// Health check route
-app.get("/", (req: Request, res: Response) => {
-  res.json({ message: "Welcome to the API" });
-});
-
-// routes
-app.use("/api/auth", authRoutes);
-app.use("/api/starting-number", startingNumberRoutes);
-app.use("/api/operation", operationRoutes);
 
 const PORT = process.env.APP_PORT;
 const MONGODB_URI = process.env.MONGODB_URI;
@@ -57,6 +53,20 @@ if (MONGODB_URI) {
     .then(() => console.log("Database connected"))
     .catch((err) => console.error("Database error:", err));
 }
+
+// Health check route
+app.get("/", (req: Request, res: Response) => {
+  res.json({
+    message: "Welcome to the API",
+    database:
+      mongoose.connection.readyState === 1 ? "Connected" : "Connecting...",
+  });
+});
+
+// routes
+app.use("/api/auth", authRoutes);
+app.use("/api/starting-number", startingNumberRoutes);
+app.use("/api/operation", operationRoutes);
 
 if (process.env.NODE_ENV !== "production") {
   app.listen(PORT, () => {
