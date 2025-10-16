@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
 import Operation from "../models/operator.model";
-import { IOperation, IOperationsTree } from "../types";
-import { Types } from "mongoose";
+import { IOperationsTree } from "../types";
 
 const JWT_SECRET = process.env.JWT_SECRET as string;
 if (!JWT_SECRET) {
